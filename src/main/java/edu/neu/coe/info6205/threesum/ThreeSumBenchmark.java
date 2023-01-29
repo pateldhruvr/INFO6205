@@ -37,10 +37,9 @@ public class ThreeSumBenchmark {
 
     private void benchmarkThreeSum(final String description, final Consumer<int[]> function, int n, final TimeLogger[] timeLoggers) {
 
+        int[] ints = supplier.get();
         if (description.equals("ThreeSumCubic") && n <= 4000) {
             final Stopwatch timer = new Stopwatch();
-            int[] ints = supplier.get();
-            System.out.println(ints.length);
             double[] rawTime = new double[runs];
 
             for (int i = 0; i < runs; i++) {
@@ -60,8 +59,6 @@ public class ThreeSumBenchmark {
 
         if (description.equals("ThreeSumQuadrithmic") && n <= 4000) {
             final Stopwatch timer = new Stopwatch();
-            int[] ints = supplier.get();
-            System.out.println(ints.length);
             double[] rawTime = new double[runs];
 
             for (int i = 0; i < runs; i++) {
@@ -81,8 +78,6 @@ public class ThreeSumBenchmark {
 
         if (description.equals("ThreeSumQuadratic") && n <= 4000) {
             final Stopwatch timer = new Stopwatch();
-            int[] ints = supplier.get();
-            System.out.println(ints.length);
             double[] rawTime = new double[runs];
 
             for (int i = 0; i < runs; i++) {
@@ -102,8 +97,6 @@ public class ThreeSumBenchmark {
 
         if (description.equals("ThreeSumQuadraticWithCalipers") && n <= 4000) {
             final Stopwatch timer = new Stopwatch();
-            int[] ints = supplier.get();
-            System.out.println(ints.length);
             double[] rawTime = new double[runs];
 
             for (int i = 0; i < runs; i++) {
@@ -117,8 +110,6 @@ public class ThreeSumBenchmark {
             for (TimeLogger timeLogger : timeLoggers) {
                 timeLogger.log(avgRawTime/runs, n);
             }
-
-            return;
         }
         // END
     }

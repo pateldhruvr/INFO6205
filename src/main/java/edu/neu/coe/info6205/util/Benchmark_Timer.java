@@ -4,6 +4,9 @@
 
 package edu.neu.coe.info6205.util;
 
+import edu.neu.coe.info6205.sort.elementary.InsertionSort;
+
+import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -125,4 +128,74 @@ public class Benchmark_Timer<T> implements Benchmark<T> {
     private final Consumer<T> fPost;
 
     final static LazyLogger logger = new LazyLogger(Benchmark_Timer.class);
+
+    public static void main(String[] args){
+
+        InsertionSort<Integer>  insertionSort = new InsertionSort<Integer>();
+        Random random = new Random();
+
+        //Additional warmup runs.
+        getWarmupRuns(10);
+        int size = 2000;
+        for (int values = 0; values < 5; values++) {
+            int finalSize = size;
+
+            Supplier<Integer[]> randomArray = () -> {
+                Integer[] arr = new Integer[finalSize];
+                for(int i = 0; i < finalSize; i++){
+                    arr[i] = random.nextInt();
+                }
+                return arr;
+            };
+
+            Supplier<Integer[]> sortedArray = () -> {
+                Integer[] arr = new Integer[finalSize];
+                for(int i = 0; i < finalSize; i++){
+                    arr[i] = i;
+                }
+                return arr;
+            };
+
+            Supplier<Integer[]> reversedArray = () -> {
+                Integer[] arr = new Integer[finalSize];
+                for(int i = 0; i < finalSize; i++){
+                    arr[i] = finalSize-i;
+                }
+                return arr;
+            };
+
+            Supplier<Integer[]> partiallySortedArray = () -> {
+                Integer[] arr = new Integer[finalSize];
+                for(int i = 0; i < finalSize/2; i++){
+                    arr[i] = i;
+                }
+                for(int i = finalSize/2; i < finalSize; i++){
+                    arr[i] = random.nextInt();
+                }
+                return arr;
+            };
+
+            Consumer<Integer[]> consumer = array -> insertionSort.sort(array, 0, array.length);
+
+            Benchmark_Timer<Integer[]> benchmarkTimer = new Benchmark_Timer<>("Insertion Sort with array size "+ size, consumer);
+
+            double timeTakenForRandomArray = benchmarkTimer.runFromSupplier(randomArray, 10);
+            System.out.println("Time taken to sort random array - " + timeTakenForRandomArray);
+            System.out.println();
+
+            double timeTakenForSortedArray = benchmarkTimer.runFromSupplier(sortedArray, 10);
+            System.out.println("Time taken to sort sorted array - " + timeTakenForSortedArray);
+            System.out.println();
+
+            double timeTakenForReverseArray = benchmarkTimer.runFromSupplier(reversedArray, 10);
+            System.out.println("Time taken to sort reversed ordered array - " + timeTakenForReverseArray);
+            System.out.println();
+
+            double timeTakenForPartiallySortedArray = benchmarkTimer.runFromSupplier(partiallySortedArray, 10);
+            System.out.println("Time taken to sort partially ordered array - " + timeTakenForPartiallySortedArray);
+            System.out.println();
+
+            size = size*2;
+        }
+    }
 }

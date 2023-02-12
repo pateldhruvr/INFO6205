@@ -9,6 +9,9 @@ package edu.neu.coe.info6205.union_find;
 
 import java.util.Arrays;
 
+import java.util.Random;
+import java.util.Scanner;
+
 /**
  * Height-weighted Quick Union with Path Compression
  */
@@ -82,6 +85,12 @@ public class UF_HWQUPC implements UF {
         validate(p);
         int root = p;
         // FIXME
+        while (root != parent[root]) {
+            if (this.pathCompression) {
+                doPathCompression(root);
+            }
+            root = parent[root];
+        }
         // END 
         return root;
     }
@@ -111,6 +120,12 @@ public class UF_HWQUPC implements UF {
      */
     public void union(int p, int q) {
         // CONSIDER can we avoid doing find again?
+
+        //Yes we can avoid find again, but then we will need to keep storing the data
+        //Which will need us to travel through whole data.
+        //Which results in O(n) time complexity. Thus, it is better to use find twice here
+        //which will give results in O(2 log n).
+
         mergeComponents(find(p), find(q));
         count--;
     }
@@ -170,7 +185,19 @@ public class UF_HWQUPC implements UF {
 
     private void mergeComponents(int i, int j) {
         // FIXME make shorter root point to taller one
-        // END 
+        int rootX = find(i);
+        int rootY = find(j);
+        if (rootX == rootY) {
+            return;
+        }
+        if (height[rootX] < height[rootY]) {
+            updateParent(rootX, rootY);
+            updateHeight(rootY, rootX);
+        } else {
+            updateParent(rootY, rootX);
+            updateHeight(rootX, rootY);
+        }
+        // END
     }
 
     /**
@@ -178,6 +205,45 @@ public class UF_HWQUPC implements UF {
      */
     private void doPathCompression(int i) {
         // FIXME update parent to value of grandparent
-        // END 
+        // END
+        if (parent[i] != i) {
+            parent[i] = find(parent[i]);
+        }
+    }
+
+
+
+    public static void main(String[] args) {
+        {
+
+            Scanner sc = new Scanner(System.in);
+            System.out.print("Enter maximum size of the array: ");
+            int n = sc.nextInt();
+            int connections = 0;
+
+            for (int i = 0; i < n; i++) {
+                System.out.print("The number of sites: " + i + "|");
+                for (int runs = 0; runs < 100; runs++) {
+                   connections = connections + count(i);
+                }
+                connections = connections / 100;
+                System.out.println("Number of average connections: " + connections);
+            }
+        }
+    }
+
+    static int count(int n) {
+        UF_HWQUPC uf = new UF_HWQUPC(n);
+        int connections = 0;
+        Random rand = new Random();
+        for (int i = 0; i < n-1; i++) {
+            int p = rand.nextInt(n);
+            int q = rand.nextInt(n);
+            if (!uf.connected(p, q)) {
+                connections++;
+                uf.union(p, q);
+            }
+        }
+        return connections;
     }
 }

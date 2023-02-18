@@ -22,38 +22,49 @@ public class Main {
         Random random = new Random();
         int[] array = new int[2000000];
         ArrayList<Long> timeList = new ArrayList<>();
-        for (int j = 50; j < 100; j++) {
-            ParSort.cutoff = 10000 * (j + 1);
-            // for (int i = 0; i < array.length; i++) array[i] = random.nextInt(10000000);
-            long time;
-            long startTime = System.currentTimeMillis();
-            for (int t = 0; t < 10; t++) {
-                for (int i = 0; i < array.length; i++) array[i] = random.nextInt(10000000);
-                ParSort.sort(array, 0, array.length);
+//        for (int j = 50; j < 100; j++) {
+//            ParSort.cutoff = 10000 * (j + 1);
+        int threads = 2;
+        while (threads <= 32){
+            ParSort.pool = new ForkJoinPool(threads);
+            System.out.println("Number of threads is: " + threads);
+
+            for (int j = 1; j <= 20; j++) {
+                //Changing cutoff value at 5% of array size.
+                ParSort.cutoff = array.length / 20 * (j);
+
+                // for (int i = 0; i < array.length; i++) array[i] = random.nextInt(10000000);
+                long time;
+                long startTime = System.currentTimeMillis();
+                for (int t = 0; t < 10; t++) {
+                    for (int i = 0; i < array.length; i++) array[i] = random.nextInt(10000000);
+                    ParSort.sort(array, 0, array.length);
+                }
+                long endTime = System.currentTimeMillis();
+                time = (endTime - startTime);
+                timeList.add(time);
+
+
+                System.out.println("cutoff：" + (ParSort.cutoff) + "\t\t10times Time:" + time + "ms");
+
             }
-            long endTime = System.currentTimeMillis();
-            time = (endTime - startTime);
-            timeList.add(time);
+            try {
+                FileOutputStream fis = new FileOutputStream("./src/result.csv");
+                OutputStreamWriter isr = new OutputStreamWriter(fis);
+                BufferedWriter bw = new BufferedWriter(isr);
+                int j = 0;
+                for (long i : timeList) {
+                    String content = (double) 10000 * (j + 1) / 2000000 + "," + (double) i / 10 + "\n";
+                    j++;
+                    bw.write(content);
+                    bw.flush();
+                }
+                bw.close();
 
-
-            System.out.println("cutoff：" + (ParSort.cutoff) + "\t\t10times Time:" + time + "ms");
-
-        }
-        try {
-            FileOutputStream fis = new FileOutputStream("./src/result.csv");
-            OutputStreamWriter isr = new OutputStreamWriter(fis);
-            BufferedWriter bw = new BufferedWriter(isr);
-            int j = 0;
-            for (long i : timeList) {
-                String content = (double) 10000 * (j + 1) / 2000000 + "," + (double) i / 10 + "\n";
-                j++;
-                bw.write(content);
-                bw.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            bw.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            threads = threads * 2;
         }
     }
 

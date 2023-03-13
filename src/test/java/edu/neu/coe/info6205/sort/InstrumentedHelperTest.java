@@ -1,6 +1,7 @@
 package edu.neu.coe.info6205.sort;
 
 import edu.neu.coe.info6205.sort.linearithmic.MergeSort;
+import edu.neu.coe.info6205.sort.linearithmic.MergeSortBasic;
 import edu.neu.coe.info6205.util.Config;
 import edu.neu.coe.info6205.util.PrivateMethodTester;
 import edu.neu.coe.info6205.util.StatPack;
@@ -311,7 +312,7 @@ public class InstrumentedHelperTest {
         int N = 8;
         final Helper<Integer> helper = new InstrumentedHelper<>("test", config);
         final PrivateMethodTester privateMethodTester = new PrivateMethodTester(helper);
-        Sort<Integer> s = new MergeSort<>(helper);
+        Sort<Integer> s = new MergeSortBasic<>(helper);
         s.init(N);
         final Integer[] xs = helper.random(Integer.class, r -> r.nextInt(1000));
         s.sort(xs);
@@ -326,7 +327,7 @@ public class InstrumentedHelperTest {
         int m = 10;
         final Helper<Integer> helper = new InstrumentedHelper<>("test", config);
         final PrivateMethodTester privateMethodTester = new PrivateMethodTester(helper);
-        Sort<Integer> s = new MergeSort<>(helper);
+        Sort<Integer> s = new MergeSortBasic<>(helper);
         s.init(N);
         for (int i = 0; i < m; i++) {
             final Integer[] xs = helper.random(Integer.class, r -> r.nextInt(1000));

@@ -11,6 +11,7 @@ import java.util.Arrays;
 public class MergeSortBasic<X extends Comparable<X>> extends SortWithHelper<X> {
 
     public static final String DESCRIPTION = "MergeSort";
+    public static final String MERGESORT = "mergesort";
 
     /**
      * Constructor for MergeSort

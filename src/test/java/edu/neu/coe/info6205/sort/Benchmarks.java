@@ -1,10 +1,7 @@
 package edu.neu.coe.info6205.sort;
 
 import edu.neu.coe.info6205.sort.elementary.*;
-import edu.neu.coe.info6205.sort.linearithmic.IntroSort;
-import edu.neu.coe.info6205.sort.linearithmic.MergeSort;
-import edu.neu.coe.info6205.sort.linearithmic.QuickSort_3way;
-import edu.neu.coe.info6205.sort.linearithmic.QuickSort_DualPivot;
+import edu.neu.coe.info6205.sort.linearithmic.*;
 import edu.neu.coe.info6205.util.*;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -66,7 +63,7 @@ public class Benchmarks {
     public void testMergeSortBenchmark() {
         String description = "Merge sort";
         final Helper<Integer> helper = new BaseHelper<>(description, N, config);
-        final GenericSort<Integer> sort = new MergeSort<>(helper);
+        final GenericSort<Integer> sort = new MergeSortBasic<>(helper);
         runBenchmark(description, sort, helper);
     }
 

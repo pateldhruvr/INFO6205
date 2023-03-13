@@ -1,5 +1,7 @@
 package edu.neu.coe.info6205.util;
 
+import edu.neu.coe.info6205.sort.Helper;
+import edu.neu.coe.info6205.sort.InstrumentedHelper;
 import edu.neu.coe.info6205.sort.SortWithHelper;
 
 import java.util.function.Consumer;
@@ -27,6 +29,13 @@ public class SorterBenchmark<T extends Comparable<T>> extends Benchmark_Timer<T[
         sorter.init(N);
         final double time = super.runFromSupplier(() -> generateRandomArray(ts), nRuns);
         for (TimeLogger timeLogger : timeLoggers) timeLogger.log(time, N);
+        Helper<T> helper = sorter.getHelper();
+        if (helper.instrumented()) {
+            InstrumentedHelper<T> instrumentedHelper = (InstrumentedHelper<T>) helper;
+            logger.info("With Instrumentation- "  + instrumentedHelper.showStats());
+        } else {
+            logger.info("Without Instrumentation- "  + helper.showStats());
+        }
     }
 
     @Override
